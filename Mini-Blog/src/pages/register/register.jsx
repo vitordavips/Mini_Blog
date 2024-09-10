@@ -2,12 +2,18 @@ import styles from './register.module.css';
 
 import { useState, useEffect } from 'react';
 
+// hooks
+import { useAuthentication } from '../../hooks/useAuthentication';
+
+
 const Register = () => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [passsword, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("");
+
+  const {createUser, error: authError, loading} = useAuthentication
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -9,13 +9,13 @@ import { useAuthentication } from '../../hooks/useAuthentication';
 const Register = () => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
-  const [passsword, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("");
 
-  const {createUser, error: authError, loading} = useAuthentication
+  const {createUser, error: authError, loading} = useAuthentication();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
@@ -23,15 +23,24 @@ const Register = () => {
     const user = {
       displayName,
       email,
-      passsword,
-    }
+      password,
+    };
 
-    if(passsword !== confirmPassword){
-      setError("As senhas precisam ser iguais!")
-    }
+    if(password !== confirmPassword){
+      setError("As senhas precisam ser iguais!");
+      return;
+    };
 
-    console.log(user)
-  }
+    const res = await createUser(user)
+
+    console.log(res);
+  };
+
+  useEffect(() => {
+    if(authError){
+      setError(authError)
+    }
+  }, [authError]);
 
   return (
     <div className={styles.register}>
@@ -67,10 +76,10 @@ const Register = () => {
           <span>Senha:</span>
           <input 
             type="password" 
-            name='passsword' 
+            name='password' 
             required 
             placeholder='Insira sua senha'
-            value={passsword}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
@@ -86,7 +95,8 @@ const Register = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </label>
-        <button className='btn'>Cadastrar</button>
+        {!loading && <button className='btn'>Cadastrar</button>}
+        {loading && <button className='btn' disabled>Aguarde...</button>}
         {error && <p className='error'>{error}</p>}
       </form>
     </div>

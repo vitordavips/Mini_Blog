@@ -8,6 +8,7 @@ const CreatePost = () => {
   const [title, setTitle] = useState("")
   const [image, setImage] = useState("")
   const [body, setBody] = useState([])
+  const [tags, setTags] = useState([])
   const [formError, setFormError] = useState("")
 
   const handleSubmit = (e) => {
@@ -15,10 +16,10 @@ const CreatePost = () => {
   }
 
   return (
-    <div>
+    <div className={styles.create_post}>
         <h1>Criar post</h1>
         <p>Escreva sobre o que quiser e compartilhe o seu conhecimento!</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>
             <span>Título:</span>
             <input 
@@ -45,8 +46,31 @@ const CreatePost = () => {
 
           <label>
             <span>Conteúdo:</span>
-            <textarea name="" required placeholder=""></textarea>
+            <textarea 
+              name="body" 
+              required 
+              placeholder="Insira o conteúdo do post"
+              onChange={(e) => setBody(e.target.value)}
+              value={body}
+            ></textarea>
           </label>
+
+          <label>
+            <span>Tags:</span>
+            <input 
+              type="text" 
+              name="tags" 
+              required 
+              placeholder="Insira as tags separadas por vírgula"
+              onChange={(e) => setTags(e.target.value)}
+              value={tags}
+            />
+          </label>
+          <button className='btn'>Cadastrar</button>
+          {/*{!loading && }
+          {loading && <button className='btn' disabled>Aguarde...</button>}
+          {error && <p className='error'>{error}</p>}
+          */}
         </form>
     </div>
   )

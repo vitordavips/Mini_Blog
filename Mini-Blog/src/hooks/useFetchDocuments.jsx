@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { db } from "../firebase/config";
+
+// funções do firebase
 import { collection, query, orderBy, onSnapshot, where, collection, QuerySnapshot } from "firebase/firestore";
 
 export const useFetchDocuments = (docColletion, search = null, uid = null) => {

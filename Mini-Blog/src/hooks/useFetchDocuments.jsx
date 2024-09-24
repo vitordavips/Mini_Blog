@@ -11,42 +11,52 @@ export const useFetchDocuments = (docColletion, search = null, uid = null) => {
   const [canceled, setCancelled] = useState(false);
 
   useEffect(() => {
-    if (canceled) return; // Se estiver cancelado, não faça nada
+    const loadData = async () =>{
+      if (canceled) return; // Se estiver cancelado, não faça nada
 
-    setLoading(true);
-    const collectionRef = collection(db, docColletion);
+      setLoading(true);
+      const collectionRef = collection(db, docColletion);
 
-    try {
-      let q = query(collectionRef, orderBy("createdAt", "desc"));
-
-      // Função que mapeia os docs do Firestore
-      const unsub = onSnapshot(q, (QuerySnapshot) => {
-        if (!canceled) {
-          const docs = QuerySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setDocuments(docs);
-          setLoading(false);
+      try {
+        let q;
+        
+        if(search){
+          q = await query(collectionRef, where("tags", "array-contains", search), orderBy("createdAt", "desc"))
+        } else{
+          q = await query(collectionRef, orderBy("createdAt", "desc"));
         }
-      }, (error) => {
+
+        // Função que mapeia os docs do Firestore
+        const unsub = onSnapshot(q, (QuerySnapshot) => {
+          if (!canceled) {
+            const docs = QuerySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setDocuments(docs);
+            setLoading(false);
+          }
+        }, (error) => {
+          if (!canceled) {
+            console.log(error);
+            setError(error.message);
+            setLoading(false);
+          }
+        });
+
+        // Limpa a subscrição para evitar vazamento de memória
+        return () => unsub();
+
+      } catch (error) {
         if (!canceled) {
           console.log(error);
           setError(error.message);
           setLoading(false);
         }
-      });
-
-      // Limpa a subscrição para evitar vazamento de memória
-      return () => unsub();
-
-    } catch (error) {
-      if (!canceled) {
-        console.log(error);
-        setError(error.message);
-        setLoading(false);
       }
-    }
+    };
+
+    loadData();
 
   }, [docColletion, canceled]);
 

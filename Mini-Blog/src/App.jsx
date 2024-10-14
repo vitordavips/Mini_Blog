@@ -66,10 +66,12 @@ function App() {
                 path='/register' 
                 element={!user ? <Register /> : <Navigate to="/" />} 
               />
+
               <Route 
                 path='/post/edit/:id' 
-                element={!user ? <EditPost /> : <Navigate to="/login" />} 
+                element={user ? <EditPost /> : <Navigate to="/login" />} 
               />
+
               <Route 
                 path='/posts/create' 
                 element={user ? <CreatePost /> : <Navigate to="/login" />} 
@@ -87,4 +89,4 @@ function App() {
   );
 };
 
-export default App
+export default App;

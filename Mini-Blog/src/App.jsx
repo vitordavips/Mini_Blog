@@ -8,9 +8,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 // hooks
 import { useState, useEffect } from 'react';
 
-// context
-import { AuthProvider } from "./context/AuthContext"
-
 // pages
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
@@ -27,6 +24,8 @@ import Search from './pages/Search/Search';
 import Post from './pages/Post/Post';
 import EditPost from './pages/EditPost/EditPost';
 
+// context
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
 
@@ -56,7 +55,7 @@ function App() {
               <Route path='/' element={<Home />} />
               <Route path='/about' element={<About />} />
               <Route path='/search' element={<Search />}/>
-              <Route path='/posts/:id' element={<Post />}/>
+              <Route path='/post/:id' element={<Post />}/>
 
               <Route 
                 path='/login' 
